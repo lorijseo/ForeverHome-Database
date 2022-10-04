@@ -3,9 +3,6 @@ import requests
 import pandas as pd
 import json
 
-main_url = 'https://www.adoptapet.com/pet-search?radius=50&postalCode=90024&speciesId=1'
-lacr_url = 'https://www.adoptapet.com/pet-search?speciesId=1&radius=50&postalCode=91214'
-
 
 def get_page(url):
     """returns parsed html page given url"""
@@ -69,7 +66,7 @@ def get_next_page(parsed_doc, page_num):
 
 
 def scrape_web(home_page):
-    """returns list of dictionaries with dog's profile"""
+    """returns list of dictionaries with dog's profile given url"""
     total_dog_list = []
 
     for pages in range(1, 5):
@@ -80,7 +77,8 @@ def scrape_web(home_page):
             dog_dict = {
                 'Name': get_name(doc, num),
                 'Breed': get_breed(doc, num),
-                'Description': get_description(doc, num),
+                'Gender': get_description(doc, num)[0],
+                'Age Info': get_description(doc, num)[1],
                 'Location': get_location(doc, num),
                 'Empty': get_location(doc, num)
             }
@@ -92,7 +90,7 @@ def scrape_web(home_page):
 def write_csv(website):
     """given a scraped website, saves all data as csv file"""
     dogs_df = pd.DataFrame(website)
-    dogs_df.to_csv('dogs1.csv')
+    dogs_df.to_csv('doggo.csv')
 
 
 def write_json(website):
@@ -101,6 +99,23 @@ def write_json(website):
         json.dump(website, f)
 
 
-write_csv(scrape_web(main_url))
+main_url = 'https://www.adoptapet.com/pet-search?radius=50&postalCode=90024&speciesId=1'
 
-write_json(scrape_web(main_url))
+
+
+
+
+# Intro
+print("Find your forever friend")
+# Menu Option
+print("What type of forever friend are you looking for?")
+print("1. Dog \n2. Cat \n3. Rabbit \n4. Hamster/Guinea Pig \n5. Bird/Chicken/Goose \n6. Horse \n7. Turtle \n8. Pig")
+animal_type = input('Type the corresponding number to choose: ')
+
+type_url = main_url[:-1] + str(animal_type)
+
+write_csv(scrape_web(type_url))
+# write_json(scrape_web(main_url))
+
+# Filter option / key word
+# Save file as json/ csv
