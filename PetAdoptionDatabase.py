@@ -168,10 +168,10 @@ def save_file(scraped_url):
 main_url = 'https://www.adoptapet.com/pet-search?radius=50&postalCode=90024&speciesId=1'
 
 # Intro
-print("Create a database to help find the perfect pet for you")
+print("Create a database to help find the perfect pet for you!")
 
 # Menu Option
-print("What type of forever friend are you looking for?")
+print("\nWhat type of forever friend are you looking for?")
 print("1. Dog \n2. Cat \n3. Rabbit \n4. Hamster/Guinea Pig \n5. Bird/Chicken/Goose \n6. Horse \n7. Turtle \n8. Pig")
 animal_type = input('Input the corresponding number to choose: ')
 
