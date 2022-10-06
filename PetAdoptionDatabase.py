@@ -126,4 +126,5 @@ if file_type == '1':
 elif file_type == '2':
     name_json = input('Save JSON file as: ')
     write_json(scrape_web(main_url), name_json)
-
+else:
+    print("Please choose a number from the menu options.")
