@@ -18,7 +18,8 @@ def get_name(parsed_doc, num):
                  'leading-h4-sm name tablet:truncate-24'
     get_name_tag = parsed_doc.find_all('p', {'class': name_class})
     for tag in get_name_tag[num]:
-        return tag.text.strip()
+        name = tag.text.strip()
+        return name.split('-')[0]
 
 
 def get_breed(parsed_doc, num):
@@ -87,6 +88,29 @@ def scrape_web(home_page):
     return total_dog_list
 
 
+def scrape_by_gender(home_page, gender_choice):
+    """returns list of dictionaries with dog's profile given url"""
+    total_dog_list = []
+
+    for pages in range(1, 5):
+        doc = get_page(home_page)
+        if pages != 1:
+            doc = get_page(get_next_page(doc, pages))
+        for num in range(0, 30):
+            if get_description(doc, num)[0] == gender_choice:
+                dog_dict = {
+                    'Name': get_name(doc, num),
+                    'Breed': get_breed(doc, num),
+                    'Gender': get_description(doc, num)[0],
+                    'Age Info': get_description(doc, num)[1],
+                    'Location': get_location(doc, num),
+                    'Empty': get_location(doc, num)
+                }
+                total_dog_list.append(dog_dict)
+
+    return total_dog_list
+
+
 def write_csv(website, name):
     """given a scraped website, saves all data as csv file"""
     dogs_df = pd.DataFrame(website)
@@ -101,30 +125,49 @@ def write_json(website, name):
         json.dump(website, f)
 
 
+def save_file(scraped_url):
+    print("How would you like to save your file as? \n1. CSV \n2. JSON")
+    file_type = input("Input the corresponding number to choose: ")
+
+    if file_type == '1':
+        name_csv = input('Save CSV file as: ')
+        write_csv(scraped_url, name_csv)
+    elif file_type == '2':
+        name_json = input('Save JSON file as: ')
+        write_json(scraped_url, name_json)
+    else:
+        print("Please choose a number from the menu options.")
+        save_file(scraped_url)
+    print("Your file has been saved!")
+
+
 # Main page
 main_url = 'https://www.adoptapet.com/pet-search?radius=50&postalCode=90024&speciesId=1'
 
 # Intro
-print("Find your forever friend")
+print("Create a database to help find the perfect pet for you")
 
 # Menu Option
 print("What type of forever friend are you looking for?")
 print("1. Dog \n2. Cat \n3. Rabbit \n4. Hamster/Guinea Pig \n5. Bird/Chicken/Goose \n6. Horse \n7. Turtle \n8. Pig")
 animal_type = input('Input the corresponding number to choose: ')
 
-# First filter: Specific animal page
+# First filter: Specific animal type
 type_url = main_url[:-1] + str(animal_type)
 
+# Second filter: Specific gender
+gender_filter = input("Would you like to filter by gender? 'y' or 'n' ")
+if gender_filter == 'y':
+    choose_gender = input("1. Male \n2. Female\nInput a number to filter by gender: ")
+    gender = ''
+    if choose_gender == '1':
+        gender = 'Male'
+    elif choose_gender == '2':
+        gender = 'Female'
+    print("This may take some take. We are collecting data...")
+    save_file(scrape_by_gender(type_url, gender))
 
-# Save data into file decided by user
-print("How would you like to save your file as? \n1. CSV \n2. JSON")
-file_type = input("Input the corresponding number to choose: ")
-
-if file_type == '1':
-    name_csv = input('Save CSV file as: ')
-    write_csv(scrape_web(type_url), name_csv)
-elif file_type == '2':
-    name_json = input('Save JSON file as: ')
-    write_json(scrape_web(main_url), name_json)
-else:
-    print("Please choose a number from the menu options.")
+# Third filter: Specific file type
+elif gender_filter == 'n':
+    print("This may take some take. We are collecting data...")
+    save_file(scrape_web(type_url))
