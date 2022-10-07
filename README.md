@@ -1,7 +1,7 @@
 # PetAdoptionDatabase
 
 ## Description:
-This program uses Requests to access a pet adoption website and BeautifulSoup to parse the html file and pull data from it. The program allows the user to filter through the **type of pet**, the **gender** of the pet, the **type of file** they wish to save their data into(CSV or JSON), and the **name of the data file**.
+This program uses Requests to access a pet adoption website and BeautifulSoup to parse a HTML file and pull data from it. The program allows the user to filter by **type of pet**, **gender** of the pet, **type of file** they wish to save their data into(CSV or JSON), and **name of the data file**.
 
 
 Pet Adoption Website: (https://www.adoptapet.com/pet-search?radius=50&postalCode=90024&speciesId=1)
