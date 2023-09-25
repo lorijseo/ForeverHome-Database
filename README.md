@@ -1,4 +1,4 @@
-# PetAdoptionDatabase
+# ForeverHome Database
 
 ## Description:
 This program uses Requests to access a pet adoption website and BeautifulSoup to parse a HTML file and pull data from it. The program allows the user to filter by **type of pet**, **gender** of the pet, **type of file** they wish to save their data into(CSV or JSON), and **name of the data file**.
